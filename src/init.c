@@ -37,7 +37,8 @@ static u32 clock_get_rate(void);
 #define GPIO_BCR	0x14
 #define GPIO_LCKR	0x18
 
-static void rcc_enable(u32 reg, u32 en)
+static void
+rcc_enable(u32 reg, u32 en)
 {
 	u32 val = read32(RCC_BASE + reg);
 	write32(RCC_BASE + reg, val | en);
@@ -80,7 +81,8 @@ ext_conf_usb_vbus(int vbus)
 #define GPIO_PB6_USBD (GPIO_CFG_ALTFUN | GPIO_CFG_ODRAIN | GPIO_CFG_INPUT)
 #define GPIO_PB7_USBD (GPIO_CFG_ALTFUN | GPIO_CFG_ODRAIN | GPIO_CFG_INPUT)
 
-static void gpio_cfg_pin(void *base, u8 pin, u8 cfg)
+static void
+gpio_cfg_pin(void *base, u8 pin, u8 cfg)
 {
 	u32 reg;
 	if (pin < 8)
@@ -96,7 +98,8 @@ static void gpio_cfg_pin(void *base, u8 pin, u8 cfg)
 		write32(base + GPIO_CFGHR, reg);
 }
 
-static void gpio_set_val(void *base, u8 pin, u8 val)
+static void
+gpio_set_val(void *base, u8 pin, u8 val)
 {
 	if (val)
 		write32(base + GPIO_BSR, BIT(pin)); /* set */
@@ -104,7 +107,8 @@ static void gpio_set_val(void *base, u8 pin, u8 val)
 		write32(base + GPIO_BCR, BIT(pin)); /* clear */
 }
 
-static u8 gpio_get_val(void *base, u8 pin)
+static u8
+gpio_get_val(void *base, u8 pin)
 {
 	return !!(read32(base + GPIO_INDR) & BIT(pin));
 }
@@ -124,7 +128,8 @@ static u8 gpio_get_val(void *base, u8 pin)
 #define USART_CTLR2 0x10
 // bit 15 in CTTLR1 for 8 time oversampling ?
 
-static void usart_init(void)
+static void
+usart_init(void)
 {
 	void *base = USART1_BASE;
 	u32 baud = CONFIG_UART_BAUDRATE;
@@ -366,7 +371,8 @@ fill_report(struct keyboard_boot_report *r)
 	}
 }
 
-void main(void)
+void
+main(void)
 {
 	struct keyboard_boot_report rep = { 0 };
 	struct keyboard_boot_report new;
