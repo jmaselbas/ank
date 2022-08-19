@@ -9,6 +9,11 @@ void usb_ep_xfer(int ep, void *buf, size_t len);
 
 static u32 clock_get_rate(void);
 
+#define EXTEND_CTR IOMEM(0x40023800)
+#define EXTEND_CTR_USBHDIO	BIT(2)
+#define EXTEND_CTR_USB5VSEL	BIT(3)
+#define EXTEND_CTR_HSIPRE	BIT(4)
+
 #define RCC_BASE IOMEM(0x40021000)
 #define RCC_CTLR 0x00
 #define RCC_AHBPCENR 0x14
@@ -37,6 +42,26 @@ static void rcc_enable(u32 reg, u32 en)
 	u32 val = read32(RCC_BASE + reg);
 	write32(RCC_BASE + reg, val | en);
 }
+
+static void
+ext_conf_usb_gpio(void)
+{
+	u32 reg = read32(EXTEND_CTR);
+	write32(EXTEND_CTR, reg | EXTEND_CTR_USBHDIO);
+}
+
+static void
+ext_conf_usb_vbus(int vbus)
+{
+	u32 reg = read32(EXTEND_CTR);
+
+	if (vbus == 5)
+		reg |= EXTEND_CTR_USB5VSEL;
+	else
+		reg &= ~EXTEND_CTR_USB5VSEL;
+	write32(EXTEND_CTR, reg);
+}
+
 
 /* combine config and mode bits */
 #define GPIO_CFG_ALTFUN 0b1000
@@ -215,6 +240,11 @@ clock_init(void)
 	reg = read32(base + RCC_CTLR);
 	write32(base + RCC_CTLR, reg & ~RCC_CTLR_PLLON); /* turn PLL off */
 
+	/* directly use HSI (without division by 2) as PLL input */
+	reg = read32(EXTEND_CTR);
+	reg |= EXTEND_CTR_HSIPRE;
+	write32(EXTEND_CTR, reg);
+
 	reg = read32(base + RCC_CFGR0);
 	reg &= ~RCC_CFGR0_PLLMUL_MASK;
 	reg |= RCC_CFGR0_PLLMUL(6); /* HSI @ 8MHz * 6 gives 48MHz */
@@ -349,6 +379,9 @@ void main(void)
 	usart_init();
 
 	puts("--------------------------------\r\n");
+
+	ext_conf_usb_gpio();
+	ext_conf_usb_vbus(5);
 
 	rcc_enable(RCC_AHBPCENR, BIT(12));
 	usb_init();
