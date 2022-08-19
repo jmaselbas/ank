@@ -1,38 +1,27 @@
-	.section    .init,"ax",@progbits
-	.global entry
+.section .init,"ax",@progbits
+.global entry
 entry:
+
+.balign 4
+.option norvc
 vector_base:
-	.balign 4
 	j   _start
-	.balign 4
 	j   _start
-	.balign 4
 	nop /* Hard Fault Handler */
-	.balign 4
 	nop
-	.balign 4
 	nop
-	.balign 4
 	nop
-	.balign 4
 	nop
-	.balign 4
 	nop
-	.balign 4
 	nop
-	.balign 4
 	nop
-	.balign 4
 	nop
-	.balign 4
 	nop /* SysTick Handler */
-	.balign 4
 	nop
-	.balign 4
 	nop /* SW Handler */
-	.balign 4
 	ebreak
 _start:
+.option rvc
 	/* disable interrupts */
 	li t0, 0x1800
 	csrs mstatus, t0
