@@ -49,4 +49,10 @@ SECTIONS {
 		_bss_end = .;
 	} > ram
 	_bss_size = SIZEOF(.bss);
+
+	.note.gnu.build-id (NOLOAD) : { *(.note.gnu.build-id) }
+
+	/DISCARD/ : {
+		*(.comment)
+	}
 }
