@@ -292,7 +292,7 @@ led_init(void)
 	struct gpio *g;
 	u8 i;
 
-	for (i = 0, g = gpio_col; i < LEN(gpio_led); i++, g++) {
+	for (i = 0, g = gpio_led; i < LEN(gpio_led); i++, g++) {
 		gpio_cfg_pin(g->port, g->pin_nr, GPIO_CFG_INPUT);
 		gpio_set_val(g->port, g->pin_nr, 0);
 	}
