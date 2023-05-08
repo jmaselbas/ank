@@ -32,7 +32,9 @@ _start:
 	/* init c runtime */
 	jal crt0
 	la sp, _stack_top
+	/* let's return in user mode as-if main caused an exception */
 	la t0, main
+	/* write main as the exception pc */
 	csrw mepc, t0
 	/* return to main */
 	mret
