@@ -10,7 +10,7 @@ MEMORY {
 SECTIONS {
 	_stack_top = ORIGIN(ram) + LENGTH(ram);
 
-	.text : {
+	.text : AT(ORIGIN(rom)) {
 		. = ALIGN(4);
 		*(.init)
 		*(.text)      /* normal code */
@@ -19,7 +19,7 @@ SECTIONS {
 		_text_end = .;
 	} > rom
 
-	.rodata : {
+	.rodata : AT(_text_end) {
 		. = ALIGN(4);
 		*(.got)       /* global offset table, if any */
 		*(.rodata)    /* constants */
@@ -40,7 +40,7 @@ SECTIONS {
 	} > ram
 	_data_size = SIZEOF(.data);
 
-	.bss (NOLOAD) : {
+	.bss (NOLOAD) : { /* will be initialized (zero) by init code (ctr0) */
 		. = ALIGN(4);
 		_bss_start = .;
 		*(.bss)
