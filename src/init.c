@@ -372,6 +372,46 @@ fill_report(struct keyboard_boot_report *r)
 	}
 }
 
+static void
+selftest(void)
+{
+	char kok[LEN(key)][LEN(key[0])];
+	u16 row = LEN(key), col = LEN(key[0]);
+	u16 prv, cnt = 0;
+	u16 i, j;
+	int tgl = 0;
+	printf("selftest %d x %d\r\n", row, col);
+	memset(kok, 0, LEN(key)*LEN(key[0]));
+	do {
+		key_scan();
+		prv = cnt;
+		for (i = 0; i < row; i++) {
+			for (j = 0; j < col; j++) {
+				if (key[i][j] && !kok[i][j]) {
+					kok[i][j] = 1;
+					cnt++;
+				}
+			}
+		}
+		if (prv == cnt) continue;
+		tgl = !tgl;
+		if (tgl)
+			gpio_cfg_pin(GPIOA_BASE, 8, GPIO_CFG_OUTPUT_10MH | GPIO_CFG_ODRAIN);
+		else
+			gpio_cfg_pin(GPIOA_BASE, 8, GPIO_CFG_INPUT);
+#if 1
+		printf("%d ---------------------------------\r\n", cnt);
+		for (i = 0; i < LEN(key); i++) {
+			printf("%d ", i);
+			for (j = 0; j < LEN(key[0]); j++) {
+				putc(kok[i][j] ? 'x' : '-');putc(' ');
+			}
+			printf("\r\n");
+		}
+#endif
+	} while (cnt < (LEN(key) * LEN(key[0])));
+}
+
 void
 main(void)
 {
@@ -385,12 +425,14 @@ main(void)
 	led_init();
 	usart_init();
 
-	puts("--------------------------------\r\n");
+	key_scan();
+	if (key[0][0]) selftest();
 
 	ext_conf_usb_gpio();
 	ext_conf_usb_vbus(5);
 	rcc_enable(RCC_AHBPCENR, RCC_APB2_USBHD_EN);
 	usb_init();
+	printf("all init done\r\n");
 	while (1) {
 		key_scan();
 
