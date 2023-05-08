@@ -24,6 +24,7 @@ static u32 clock_get_rate(void);
 #define RCC_APB2_GPIOB_EN	BIT(3)
 #define RCC_APB2_GPIOC_EN	BIT(4)
 #define RCC_APB2_GPIOD_EN	BIT(5)
+#define RCC_APB2_USBHD_EN	BIT(12)
 #define RCC_APB2_USART1_EN	BIT(14)
 
 #define GPIOA_BASE IOMEM(0x40010800)
@@ -388,8 +389,7 @@ main(void)
 
 	ext_conf_usb_gpio();
 	ext_conf_usb_vbus(5);
-
-	rcc_enable(RCC_AHBPCENR, BIT(12));
+	rcc_enable(RCC_AHBPCENR, RCC_APB2_USBHD_EN);
 	usb_init();
 	while (1) {
 		key_scan();
