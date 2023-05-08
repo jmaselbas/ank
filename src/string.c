@@ -83,13 +83,18 @@ void printf(char *fmt, ...)
 void *
 memcpy(void *restrict d, const void *restrict s, size_t n)
 {
+	void *r = d;
+
 	for (; n >= 1; d += 1, s += 1, n -= 1)
 		*((u8 *)d) = *(const u8 *)s;
+
+	return r;
 }
 
 void *
 memset(void *s, int c, size_t n)
 {
+	void *r = s;
 	u32 v = c & 0xff;
 	v |= v << 8;
 	v |= v << 16;
@@ -103,6 +108,8 @@ memset(void *s, int c, size_t n)
 		*((u16 *)s) = v;
 	for (; n >= 1; s += 1, n -= 1)
 		*((u8 *)s) = v;
+
+	return r;
 }
 
 int
