@@ -99,7 +99,7 @@ memset(void *s, int c, size_t n)
 	v |= v << 8;
 	v |= v << 16;
 
-	for (; (u32)s % sizeof(u32) && n >= 1; s += 1, n -= 1)
+	for (; (uintptr_t)s % sizeof(u32) && n >= 1; s += 1, n -= 1)
 		*((u8 *)s) = v;
 
 	for (; n >= 4; s += 4, n -= 4)
