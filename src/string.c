@@ -7,7 +7,7 @@ void putc(u8 c)
 	putc_ll(c);
 }
 
-void puts(char *s)
+void puts(const char *s)
 {
 	while (*s)
 		putc(*s++);
@@ -44,10 +44,10 @@ void putd(s32 v)
 		putc(s[--l]);
 }
 
-void printf(char *fmt, ...)
+void printf(const char *fmt, ...)
 {
 	va_list ap;
-	char *s;
+	const char *s;
 
 	va_start(ap, fmt);
 

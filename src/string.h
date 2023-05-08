@@ -3,10 +3,10 @@
 #include "common.h"
 
 void putc(u8 c);
-void puts(char *s);
+void puts(const char *s);
 void puth(u32 v);
 void putd(s32 v);
-void printf(char *fmt, ...);
+void printf(const char *fmt, ...);
 
 void *memcpy(void *restrict d, const void *restrict s, size_t n);
 void *memset(void *s, int c, size_t n);
