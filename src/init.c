@@ -90,8 +90,8 @@ gpio_cfg_pin(void *base, u8 pin, u8 cfg)
 		reg = read32(base + GPIO_CFGLR);
 	else
 		reg = read32(base + GPIO_CFGHR);
-	cfg &= 0b1111;
-	reg &= ~(0b1111 << (pin % 8) * 4);
+	cfg &= 0xf;
+	reg &= ~(0xf << (pin % 8) * 4);
 	reg |= (cfg << (pin % 8) * 4);
 	if (pin < 8)
 		write32(base + GPIO_CFGLR, reg);
