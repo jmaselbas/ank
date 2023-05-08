@@ -27,10 +27,14 @@ ank.elf: $(obj) link.ld
 	$(CC) -static -T link.ld $(CFLAGS) $(LDFLAGS) -o $@ $(obj)
 
 ank.bin: ank.elf
+	@$(SIZE) -G $^
 	$(OBJCOPY) -O binary $^ $@
-	$(SIZE) -G $^
+	@wc -c $@
+
+flash: ank.bin
+	wch-isp -rp flash ank.bin
 
 clean:
 	rm -f $(obj)
 
-.PHONY: all clean
+.PHONY: all clean flash
