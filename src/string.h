@@ -3,7 +3,7 @@
 #include "common.h"
 
 void putc(u8 c);
-void puts(u8 *s);
+void puts(char *s);
 void puth(u32 v);
 void putd(s32 v);
 void printf(char *fmt, ...);

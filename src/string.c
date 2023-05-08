@@ -7,7 +7,7 @@ void putc(u8 c)
 	putc_ll(c);
 }
 
-void puts(u8 *s)
+void puts(char *s)
 {
 	while (*s)
 		putc(*s++);
