@@ -10,7 +10,7 @@ SIZE=$(CROSS_COMPILE)size
 endif
 
 ARCH_CFLAGS=-march=rv32imac_zicsr -mabi=ilp32
-CFLAGS=$(ARCH_CFLAGS) -fno-pie -fno-pic -ffreestanding -nostdlib -nostartfiles -nodefaultlibs -Os -flto
+ANK_CFLAGS=$(ARCH_CFLAGS) -fno-pie -fno-pic -ffreestanding -nostdlib -nostartfiles -nodefaultlibs -Os -flto $(CFLAGS)
 
 hdr=common.h config.h layout.h hid.h hid_key.h usb.h
 obj=start.o init.o string.o usb.o
@@ -18,13 +18,13 @@ obj=start.o init.o string.o usb.o
 all: ank.bin
 
 %.o: %.S
-	$(CC) $(CFLAGS) -c -o $@ $<
+	$(CC) $(ANK_CFLAGS) -c -o $@ $<
 
 %.o: %.c $(hdr)
-	$(CC) $(CFLAGS) -c -o $@ $<
+	$(CC) $(ANK_CFLAGS) -c -o $@ $<
 
 ank.elf: $(obj) link.ld
-	$(CC) -static -T link.ld $(CFLAGS) $(LDFLAGS) -o $@ $(obj)
+	$(CC) -static -T link.ld $(ANK_CFLAGS) $(LDFLAGS) -o $@ $(obj)
 
 ank.bin: ank.elf
 	@$(SIZE) -G $^
